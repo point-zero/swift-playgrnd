@@ -2,20 +2,44 @@
 
 import Cocoa
 
-var str = "Hello, playground"
-println("Hello World")
+/////////////////////////Constatnts and Varaibles
 
-for character in str
+let languageName: String = "Swift"
+var languageVersion: Double = 1.0
+let introductionYear: Int = 2014
+var isAwesomeLanguage: Bool = true
+
+// We may ommit variable and constant type if there is obvious from right hand side
+var variableWithExplicitType = "Hello, playground" //inferred to be of type String
+var integerVariable = 2014									//inferred to be of type Int
+
+// We may use any Unicode character for var or let naming:
+let π = 3.14
+let українськаМова = "Ukrainian language"
+
+///////////////////////Strings
+
+// Any String has all variety of objective-C's NSString capabilities and may be used instead of NSString
+let components = "~/Documents/Swift/Tutorial.pdf".pathComponents // Returns Array not NSArray
+// ["~", "Documents", "Swift", "Tutorial.pdf"]
+
+// All string is a collection of characters.
+// We may iterate through this collection in for-each loop:
+for character in variableWithExplicitType
 {
 	println(character)
 }
 
-var dLetter: Character = "D"
+// Character type
 var cLetter: Character = "C"
+var dLetter: Character = "D"
+var eLetter = "E"
+var fLetter = "f"
 
-//var dPlusC = dLetter + cLetter // Why this doesn't work
-let dPlusC = "\(dLetter)\(cLetter)"
+var stringFromCharacters = cLetter + fLetter
+stringFromCharacters += dLetter
 
+// Strings interpolation:
 let a = 3, b = 5
 var resultString = "\(a) times \(b) is \(a * b)"
 
@@ -26,39 +50,133 @@ for var counter = 0; counter < b; ++counter
 	println("\(counter)")
 }
 
-var counter = 0
-while counter < b
-{
-	println("\(counter)")
-	counter++
-}
+//////////////////////////Arrays and Dictionaries
 
-var simpleArray: [String] = ["One", "Two", "Three"]
+//Array has all benefits of NSArray
+//Dictionary has all benefits of NSDictionary
 
+//Two differents between collections (NSArray, NSDictionary) in Objective-C and in Swift:
+// 1. Collection can hold any type (not only objects);
+// 2. Collections in Swift is Type Collections.
+//		Collection in Swift may hold only one object type. Thet was declared
 
-//////////////Dictionary///////////////////
+var simpleArray: Array<String> = ["One", "Two", "Three"]
+var simpleArray2 = ["Four", "Five", "Six"]
+
+//var simpleArray3: String[] = ["Seven", "Eight", 9] //! Wrong -- array of string should always consist of strings
 
 var theDictionary: Dictionary<String, String>
 
 let theNumberOfLegs = ["Ant" : 6, "Snake" : 0, "Dog" : 4]
+
+// Modifying arrays
+var shoppingList = ["Milk", "Eggs"]
+println("The first you should buy \(shoppingList[0])")
+
+shoppingList += "Flour" // Add object
+shoppingList += ["Butter", "Cheese", "Chocolate"] // Concatenate array
+
+shoppingList[0] = "Six Eggs" // Change first value
+
+shoppingList[3...5] = ["Apples", "Bannanas"] // Exchange Butter, Cheese, Chocolate with Appleas, Bannanas
+
+// Why the following doesn't work????
+//theNumberOfLegs["spider"] = 273 // Add 'spider' entry into legs dictionary
+//theNumberOfLegs["spider"] = 8   // Correct value
+
+////////////////////////////// Optionals
+
+let possibleLegs: Int? = theNumberOfLegs["aardvark"]
+
+if nil == possibleLegs
+{
+	println("The aadvark isn't found")
+}
+else
+{
+	let legCount = possibleLegs! //unwrap operator -> !
+	println("The aadvark has \(legCount) legs")
+}
+
+// Some 'synthetic shugar':
+
+if let legCount2 = possibleLegs // if possibleLegs has value unwrap it and assign to legCount2
+{
+	println("The aarvark has \(legCount2) legs")
+}
+
+///////////////////////////// if statement
+
+if var legCount = possibleLegs
+{
+	if 0 == legCount
+	{
+		println("It slithers and slides around")
+	}
+	else if (1 == legCount) // Braces is alowed, but not necessary
+	{
+		println("It hops")
+	}
+	else
+	{
+		println("It walks")
+	}
+}
+
+///////////////////////////// Switch statement
+//1. Switch statement in Swift doesn't have 'breaks'
+
+if var legCount = possibleLegs
+{
+	switch legCount
+	{
+		case 0:
+			println("It slithers and slides around")
+		case 1, 3: // <- complex matching. May be range (1...3)
+			println("It hops")
+		default:
+			println("It walks")
+	}
+}
+
+//2. In swift you may use any objects for matching in switch statement. Not only integers
+
+switch shoppingList
+{
+	case "Milk", "Eggs":
+		println("Full protein meals");
+	case "Bannanas", "Appleas":
+		println("Simple food")
+	default:
+		println("Unknown food type")
+}
+
+///////////////////////////// Loops
+
+var counter = 3
+while counter > 0
+{
+	println("\(counter)")
+	counter--
+}
+
+for counter = 0; counter < 5; counter++
+{
+	println("\(counter)")
+}
+
+do
+{
+	println("\(counter)")
+	counter--
+} while counter > 0
 
 for (theAnimal, theLegsCount) in theNumberOfLegs
 {
 	println("The \(theAnimal) has \(theLegsCount) legs!")
 }
 
-
-var theProbableCatLegsCount: Int? = theNumberOfLegs["Cat"]
-
-if nil == theProbableCatLegsCount
-{
-	println("No legs found")
-}
-else
-{
-	var theCatLegsCount: Int = theProbableCatLegsCount!
-	println("Cat has \(theCatLegsCount)")
-}
+////////////////////// Functions
 
 func repeate (count: Int, closure: () -> ())
 {
