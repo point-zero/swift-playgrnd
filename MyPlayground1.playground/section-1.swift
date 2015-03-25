@@ -36,8 +36,8 @@ var dLetter: Character = "D"
 var eLetter = "E"
 var fLetter = "f"
 
-var stringFromCharacters = cLetter + fLetter
-stringFromCharacters += dLetter
+var stringFromCharacters = "\(cLetter)" + "\(fLetter)"
+stringFromCharacters += "\(dLetter)"
 
 // Strings interpolation:
 let a = 3, b = 5
@@ -67,13 +67,13 @@ var simpleArray2 = ["Four", "Five", "Six"]
 
 var theDictionary: Dictionary<String, String>
 
-let theNumberOfLegs = ["Ant" : 6, "Snake" : 0, "Dog" : 4]
+var theNumberOfLegs = ["Ant" : 6, "Snake" : 0, "Dog" : 4]
 
 // Modifying arrays
 var shoppingList = ["Milk", "Eggs"]
 println("The first you should buy \(shoppingList[0])")
 
-shoppingList += "Flour" // Add object
+shoppingList.append("Flour") // Add object
 shoppingList += ["Butter", "Cheese", "Chocolate"] // Concatenate array
 
 shoppingList[0] = "Six Eggs" // Change first value
@@ -81,8 +81,11 @@ shoppingList[0] = "Six Eggs" // Change first value
 shoppingList[3...5] = ["Apples", "Bannanas"] // Exchange Butter, Cheese, Chocolate with Appleas, Bannanas
 
 // Why the following doesn't work????
-//theNumberOfLegs["spider"] = 273 // Add 'spider' entry into legs dictionary
-//theNumberOfLegs["spider"] = 8   // Correct value
+theNumberOfLegs.updateValue(273, forKey : "spider")
+
+theNumberOfLegs.updateValue(10, forKey : "spider")   // Correct value
+
+theNumberOfLegs["spider"] = 8
 
 ////////////////////////////// Optionals
 
@@ -139,17 +142,18 @@ if var legCount = possibleLegs
 	}
 }
 
-//2. In swift you may use any objects for matching in switch statement. Not only integers
+//2. In swift you may use any objects for matching in switch statement. Not only integers????
+//??? Doesn't work. Why?:
 
-switch shoppingList
-{
-	case "Milk", "Eggs":
-		println("Full protein meals");
-	case "Bannanas", "Appleas":
-		println("Simple food")
-	default:
-		println("Unknown food type")
-}
+//switch shoppingList
+//{
+//	case "Milk":
+//		println("Full protein meals");
+//	case "Bannanas":
+//		println("Simple food")
+//	default:			// default case is mandatory in Swift
+//		println("Unknown food type")
+//}
 
 ///////////////////////////// Loops
 
@@ -178,7 +182,75 @@ for (theAnimal, theLegsCount) in theNumberOfLegs
 
 ////////////////////// Functions
 
-func repeate (count: Int, closure: () -> ())
+func sayHello()
+{
+	println("Hello Swift")
+}
+
+sayHello()
+
+func sayHello2(name: String = "World")
+{
+	println("Hello \(name)!")
+}
+
+sayHello2()
+sayHello2(name: "Joe")
+
+func buildGreetings(name: String) -> String
+{
+	return "Hello " + name
+}
+
+println(buildGreetings("World"))
+
+// We may return tuple value from the function
+
+func refreshWebPage() -> (Int, String)
+{
+	//..do thmthng
+	return (200, "Success")
+}
+
+let (code, message) = refreshWebPage()
+
+println("Received \(code): \(message)")
+
+//named values in tuple
+func refreshWebPage2() -> (code: Int, message: String)
+{
+	//...do thmthng
+	return (200, "Success")
+}
+
+let status = refreshWebPage2()
+
+println("Received \(status.code): \(status.message)")
+
+//////////////////////////// Tuples
+
+// Tuples decomposition for enumeration:
+
+for (animal, legs) in theNumberOfLegs
+{
+	println("\(animal) has \(legs) legs")
+}
+
+/////////////////////////// Closures
+
+let someClosure =
+{
+	println("Hello World")
+}
+
+let greetingPrinter: () -> () =
+{
+	println("Hello World")
+}
+
+greetingPrinter()
+
+func repeate(count: Int, closure: () -> ())
 {
 	for i in 0...(count - 1)
 	{
@@ -188,13 +260,15 @@ func repeate (count: Int, closure: () -> ())
 
 repeate(3, {println("Hello World")})
 
+
+// Trailing Closure:
 repeate(2)
 {
 	println("Hello World 2")
 }
 
 
-/////////////Classes////////////////
+//////////////////////////////// Classes
 
 class Vehicle
 {
