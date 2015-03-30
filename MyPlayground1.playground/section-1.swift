@@ -272,10 +272,10 @@ repeate(2)
 
 class Vehicle
 {
-	var wheelsCount = 0
-	var description: String
+	var wheelsCount = 0			// Stored property. Has backing store.
+	var description: String		// Computed Property. Doesn't have backing store
 	{
-		get
+		get		// "get" keyword may be ommited in case if there is only getter
 		{
 			return "The vehicle has \(wheelsCount) wheels"
 		}
@@ -322,6 +322,7 @@ println(myCar.description)
 myCar.speed = 50
 println(myCar.description)
 
+/////////////////////////////////// Property observers
 
 class parentsCar : Car
 {
@@ -335,22 +336,53 @@ class parentsCar : Car
 			}
 		}
 		
+		didSet
+		{
+			println("Previous value was \(oldValue)")
+		}
 	}
 }
 
 var myParentsCar = parentsCar()
 myParentsCar.speed = 65
 
+////////////////////////////////////// Class Methods
+
+class Counter
+{
+	var count = 0
+	func increment()
+	{
+		count++
+	}
+	
+	func incrementBy(amount: Int)
+	{
+		count += amount
+	}
+	
+	func resetToCount(count: Int) // Input func param has name equal to property name...
+	{
+		self.count = count // ...so use "self." syntax
+	}
+}
+
+///////////////////////////////////// Structures
 
 struct Point
 {
 	var x, y: Double
 	mutating func moveToTheRightBy(dx: Double)
 	{
-		self.x +=
-					dx
+		self.x += dx
 	}
 }
+
+var point1 = Point(x: 0.0, y: 0.0)
+point1.moveToTheRightBy(10.0)
+
+let point2 = Point(x: 0.0, y: 0.0)
+//point2.moveToTheRightBy(15.0) // Error: point2 is constant, but moveToTheRightBy changes the instance
 
 struct Size
 {
@@ -368,7 +400,107 @@ struct Rect
 	}
 }
 
-///////////////////Generic////////////////////
+// Two diffs between classes and structures:
+//1. Structures don't support inheritance
+//2. Classes are passed through reference. Structures are pass by value.
+
+///////////////////////////////// Enums
+
+enum Planet: Int
+{
+	case Mercury = 1,
+	Venus,
+	Earth,
+	Mars,
+	Jupiter,
+	Saturn
+}
+
+let earthNumber = Planet.Earth.rawValue
+
+// Enums can be of various type:
+
+enum StringsEnum: String
+{
+	case String1 = "String1"
+	case String2 = "String2"
+	case String3 = "String3"
+}
+
+// Enum could be even without a type:
+
+enum Compass
+{
+	case North, East, South, West
+}
+
+var directionToHead = Compass.West // directionToHead is of type Compass
+directionToHead = .East
+
+// Enumerations: Assosiated values:
+
+enum TrainStatus
+{
+	case OnTime
+	case Delayed(Int)
+}
+
+var tStatus = TrainStatus.OnTime
+tStatus = .Delayed(10)
+
+enum ExtendedTrainStatus
+{
+	case OnTime, Delayed(Int)
+	init()
+	{
+		self = .OnTime
+	}
+	var Description: String
+	{
+		switch self
+		{
+			case OnTime:
+				return "On time"
+			case Delayed(let Minutes):
+				return "Train delayed on \(Minutes) minutes"
+		}
+	}
+}
+
+var etStatus = ExtendedTrainStatus()
+println(etStatus.Description)
+
+etStatus = .Delayed(10)
+println(etStatus.Description)
+
+////////////////////////////////// Extensions
+// All named type may be extended in Swift
+
+extension Size // extension of Size structure
+{
+	mutating func increaseByFactor(factor: Double)
+	{
+		self.width *= factor
+		self.height *= factor
+	}
+}
+
+extension Int
+{
+	func repetitions(task: ()->())
+	{
+		for(var i = 0; i < self; ++i)
+		{
+			task()
+		}
+	}
+}
+
+4.repetitions{println("Hello!")}
+
+
+////////////////////////////////// Generics
+// Like templates in C++
 
 class Stack<T>
 {
