@@ -528,12 +528,20 @@ println(theStringStack.Pop())
 
 
 ////////////////Optionals////////////////
+// Optional types represent possibly missing values.
+// Optional has two descreet states:
+// 1. Default initialized to nil. Represents absents of any value
+var optionalIntVariable: Int?
 
-//Non-optional variables couldn't be nil
+// 2. When optional wraps some value
+optionalIntVariable = 6
+
+//Non-optional types can't be nil
 var someVariable: Int?
 someVariable = nil
 
-func indexOfString(inStringArray: [String], inStringToFind: String) -> Int?
+// Optional return type
+func indexOfString(inStringArray: [String], inStringToFind: String) -> Int? // optional return type
 {
 	for (index, value) in enumerate(inStringArray)
 	{
@@ -545,8 +553,10 @@ func indexOfString(inStringArray: [String], inStringToFind: String) -> Int?
 	return nil
 }
 
+// Unwraping optionals:
+
 var theNeighbors = ["Allan", "Olaf", "Elisabeth", "Ron"]
-var theIndex = indexOfString(theNeighbors, "Ron")
+let theIndex = indexOfString(theNeighbors, "Ron")
 
 if theIndex != nil
 {
@@ -557,7 +567,8 @@ else
 	println("Not found")
 }
 
-if let theIndexValue = theIndex
+// Optional bindings:
+if let theIndexValue = theIndex // Optional binding uses "if-let" syntax
 {
 	println("Hello \(theNeighbors[theIndexValue])")
 }
@@ -566,37 +577,64 @@ else
 	println("Not found")
 }
 
-////////////////Optionals Chains////////////////
-
+////////////////Optionals Chaining
 class Address
 {
 	var street: String?
 	var building: String?
+	var roomNumber: String?
 }
 
-class Appartment
+class Residence
 {
 	var address: Address?
 }
 
 class Person
 {
-	var appartment: Appartment?
+	var residence: Residence?
 }
 
 var theAddress = Address()
-var theAppartment = Appartment()
+theAddress.street = "Kvitnevyy lane"
+theAddress.building = "1-V"
+var theAppartment = Residence()
 var thePerson = Person()
 
 theAppartment.address = theAddress
-thePerson.appartment = theAppartment
+thePerson.residence = theAppartment
 
+// If we want to check room numder we should:
+if let home = thePerson.residence
+{
+	if let address = home.address
+	{
+		if let room = address.roomNumber
+		{
+			if let convertedNumber = room.toInt()
+			{
+				// do thmthng
+			}
+		}
+	}
+}
 
-thePerson.appartment?.address?.building = "123"
+// Instead we may use optional chaining:
+let convertedNumber = thePerson.residence?.address?.roomNumber?.toInt()
 
-if let theBuilding = thePerson.appartment?.address?.building?
+thePerson.residence?.address?.building = "123"
+
+//Optional chaining may be combined with optional bindings
+if let theBuilding = thePerson.residence?.address?.building?
 {
 	println("The bulding number is \(theBuilding)")
+}
+
+// Optionals are simply generics:
+enum Optional<T>
+{
+	case None
+	case Some(T)
 }
 
 
