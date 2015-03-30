@@ -502,16 +502,16 @@ extension Int
 ////////////////////////////////// Generics
 // Like templates in C++
 
-class Stack<T>
+struct Stack<T>
 {
-	var elementsStore = [T]()
-	func Push(InputValue: T)
+	var internalStorage = [T]()
+	mutating func Push(element: T)
 	{
-		elementsStore.append(InputValue)
+		internalStorage.append(element)
 	}
-	func Pop() -> T
+	mutating func Pop() -> T
 	{
-		return elementsStore.removeLast()
+		return internalStorage.removeLast()
 	}
 }
 
