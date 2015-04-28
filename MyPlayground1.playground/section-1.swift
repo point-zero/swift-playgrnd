@@ -637,6 +637,92 @@ enum Optional<T>
 	case Some(T)
 }
 
+/////////////////// Memoty management
+// Memory management is like an ARC in objective-c
+
+// Strong reference:
+
+class StrongPerson
+{
+	let name: String
+	init (name: String) {
+		self.name = name
+		println("Hello, \(self.name)")
+	}
+	deinit { println("Bye, \(self.name)") }
+}
+
+var strongPerson1 :StrongPerson? = nil
+var strongPerson2 :StrongPerson? = nil
+var strongPerson3 :StrongPerson? = nil
+
+// StrongPerson instance will be created in the next line:
+strongPerson1 = StrongPerson(name: "Denis")
+strongPerson2 = strongPerson1
+strongPerson3 = strongPerson2
+
+strongPerson1 = nil
+strongPerson2 = nil
+
+// Strong person will be deallocated in the next line:
+strongPerson3 = nil
+
+
+// Cycles (ownership):
+
+class Appartment
+{
+	var tenant: AppartmentPerson?
+}
+
+class AppartmentPerson
+{
+	var appartment: Appartment?
+	func moveIn(apt: Appartment)
+	{
+		self.appartment = apt
+		apt.tenant = self
+	}
+}
+
+var renters = ["Elsvette" : AppartmentPerson()]
+var appartments = [277 : Appartment()]
+renters["Elsvette"]!.moveIn(appartments[277]!)
+
+var renter = renters["Elsvette"]
+println("Renter: \(renter)")
+
+renters["Elsvette"] = nil
+appartments[277] = nil
+
+// There is retain cycle. Use weak keyword.
+
+class Appartment2
+{
+	weak var tenant: AppartmentPerson2?
+}
+
+class AppartmentPerson2
+{
+	weak var appartment: Appartment2?
+	func moveIn(apt: Appartment2)
+	{
+		self.appartment = apt
+		apt.tenant = self
+	}
+}
+// weak references are optional values
+// Binding the optional produces strong value:
+
+if let tenantA = appartments[277]?.tenant
+{
+	// tenentA is strong reference here
+}
+
+///////////////////// Unowned reference
+
+
+
 
 
 
